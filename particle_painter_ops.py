@@ -80,7 +80,6 @@ class particle_painter_OT_drop(Operator):
 
     def execute(self, context):
         self.get_particles(context)
-        print('Drop File:',self.filepath)
         context.window_manager.modal_handler_add(self)
         context.area.tag_redraw()
         return {'RUNNING_MODAL'}
@@ -91,12 +90,12 @@ class particle_painter_OT_drop(Operator):
             mod = obj.modifiers.new(part.name,'PARTICLE_SYSTEM')
             mod.particle_system.settings = part
             mod.particle_system.vertex_group_density = part.name
-        bpy.ops.object.mode_set(mode='WEIGHT_PAINT') 
-
+        
     def finish(self,context):
         context.window.cursor_set('DEFAULT')
         context.view_layer.objects.active = self.obj 
         context.area.tag_redraw()
+        bpy.ops.object.mode_set(mode='WEIGHT_PAINT') 
         return {'FINISHED'}
 
     def modal(self, context, event):
@@ -104,14 +103,11 @@ class particle_painter_OT_drop(Operator):
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
         selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=[])
-
-        # if event.ctrl:
-        #     if event.mouse_y > event.mouse_prev_y:
-        #         self.obj.rotation_euler.z += .1
-        #     else:
-        #         self.obj.rotation_euler.z -= .1
-        # else:
-        #     self.position_object(selected_point,selected_obj)
+        bpy.ops.object.select_all(action='DESELECT')
+        if selected_obj:
+            self.obj = selected_obj
+            selected_obj.select_set(True)
+            context.view_layer.objects.active = selected_obj
 
         if event_is_place_asset(event):
             self.assign_particle_system(context,selected_obj)
