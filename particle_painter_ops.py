@@ -177,9 +177,25 @@ class particle_painter_OT_particle_paint(bpy.types.Operator):
             row.label(text=particle.name)
         layout.prop(self,'group_name',text="Particle Name")
 
+
+class particle_painter_OT_settings(Operator):
+    bl_idname = "particle_painter.settings"
+    bl_label = "Settings"
+    bl_options = {'UNDO'}
+    
+    filepath: StringProperty(name='Library Name')
+
+    particle_systems = []
+    obj = None
+
+    def execute(self, context):
+        bpy.ops.object.mode_set(mode='OBJECT')
+        return {'FINISHED'}
+
 classes = (
     particle_painter_OT_activate,
     particle_painter_OT_drop,
+    particle_painter_OT_settings
 )
 
 register, unregister = bpy.utils.register_classes_factory(classes)

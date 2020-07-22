@@ -23,9 +23,14 @@ class FILEBROWSER_PT_particle_painter_headers(bpy.types.Panel):
         row = layout.row()
         row.scale_y = 1.3
         row.label(text="Particle Painter")
-        row = layout.row()
-        row.scale_y = 1.3
-        row.label(text="Library")        
+        if context.object and context.object.mode != 'OBJECT':
+            row = layout.row()
+            row.scale_y = 1.3
+            row.operator('particle_painter.settings',text="Finish Painting",icon='SETTINGS')     
+        else:
+            row = layout.row()
+            row.scale_y = 1.3
+            row.operator('particle_painter.settings',text="Settings",icon='PANEL_CLOSE')                    
 
 classes = (
     FILEBROWSER_PT_particle_painter_headers,
